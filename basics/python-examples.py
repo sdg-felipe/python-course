@@ -161,7 +161,7 @@ print(solution)
 
 # IMPORTS
 
-import project_1.function as grade_service
+import basics.function as grade_service
 grades = {
     'homework_1': 85,
     'homework_2': 90,
