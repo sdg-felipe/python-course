@@ -56,6 +56,6 @@ def test_todo():
 
 # NOT WORKING
 def test_read_all_authenticated():
-    response = client.get("/")
+    response = client.get("/todos")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == []

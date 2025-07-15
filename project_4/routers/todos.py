@@ -9,7 +9,10 @@ from models import Todos
 from db import SessionLocal
 from .auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/todos",
+    tags=["todos"]
+)
 
 def get_db():
     db = SessionLocal()
@@ -37,7 +40,7 @@ async def get_all(user: user_dependency, db: db_dependency):
 
     return db.query(Todos).filter(Todos.owner_id == user.get('id')).all()
 
-@router.get("/todos/{id}")
+@router.get("/{id}")
 async def get_todo(user: user_dependency, db: db_dependency,id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=401, detail='auth failed')
@@ -48,7 +51,7 @@ async def get_todo(user: user_dependency, db: db_dependency,id: int = Path(gt=0)
         return todo_model
     raise HTTPException(status_code=404, detail='Todo not found')
 
-@router.post("/todos")
+@router.post("/")
 async def create_todo(user: user_dependency, db:db_dependency, todo: TodoRequest):
     if user is None:
         raise HTTPException(status_code=401, detail='auth failed')
@@ -58,7 +61,7 @@ async def create_todo(user: user_dependency, db:db_dependency, todo: TodoRequest
     db.add(todo_model)
     db.commit()
 
-@router.put("/todos/{id}")
+@router.put("/{id}")
 async def update_todo(user: user_dependency, db: db_dependency, todo: TodoRequest, id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=401, detail='auth failed')
@@ -76,7 +79,7 @@ async def update_todo(user: user_dependency, db: db_dependency, todo: TodoReques
     db.add(todo_model)
     db.commit()
 
-@router.delete("/todos/{id}")
+@router.delete("/{id}")
 async def delete_todo(user: user_dependency, db: db_dependency, id: int = Path(gt=0)):
     if user is None:
         raise HTTPException(status_code=401, detail='auth failed')
